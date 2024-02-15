@@ -1,0 +1,16 @@
+# For Flask apps
+Flask
+Flask-SQLAlchemy
+Flask-Marshmallow
+Marshmallow-SQLAlchemy
+jwt
+# For Dash apps
+dash
+dash-bootstrap-components
+pandas
+requests
+# For testing
+pytest
+pytest-cov
+selenium
+pytest-flask
