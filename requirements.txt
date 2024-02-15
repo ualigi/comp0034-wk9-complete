@@ -13,4 +13,6 @@ requests
 pytest
 pytest-cov
 selenium
-pytest-flask
+# pytest-flask
+# Dash testing may need to be esacaped: dash\[testing]
+dash[testing]
