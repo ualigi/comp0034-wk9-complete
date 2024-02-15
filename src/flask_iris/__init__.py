@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_iris.config import Config
+from flask_iris.config import Config, TestConfig, DevConfig
 from flask_iris.create_ml_model import create_model
 
 
@@ -15,10 +15,10 @@ def create_app(test_config=None):
     """
     app = Flask(__name__)
 
-    app.config.from_object(config.DevConfig)
+    app.config.from_object(DevConfig)
 
     if test_config:
-        app.config.from_object(config.TestConfig)
+        app.config.from_object(TestConfig)
 
     # Include the routes from routes.py
     with app.app_context():
