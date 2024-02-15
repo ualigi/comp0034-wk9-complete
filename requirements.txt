@@ -4,6 +4,7 @@ Flask-SQLAlchemy
 Flask-Marshmallow
 Marshmallow-SQLAlchemy
 jwt
+flask-wtf
 # For Dash apps
 dash
 dash-bootstrap-components
