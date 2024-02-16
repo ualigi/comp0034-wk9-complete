@@ -1,3 +1,5 @@
+import time
+
 from dash.testing.application_runners import import_app
 
 
@@ -8,13 +10,13 @@ def test_home_h1textequals(dash_duo):
     THEN the page title should be
     """
     # Create the app
-    app = import_app(app_file="paralympics_dash.paralympics_dash.py")
+    app = import_app(app_file="paralympics_dash.paralympics_dash")
 
     # Start the app in a server
-    yield dash_duo.start_server(app)
+    dash_duo.start_server(app)
 
-    # Waits for the page, this is a Dash function not Selenium see https://dash.plotly.com/testing#browser-apis
-    dash_duo.wait_for_page(url='http://127.0.0.1:8050', timeout=10)
+    # Delay to wait for the page to load
+    time.sleep(2)
 
     dash_duo.wait_for_element("h1", timeout=4)
 

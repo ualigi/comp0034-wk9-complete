@@ -1,8 +1,8 @@
 from dash import Dash, Output, Input
 import dash_bootstrap_components as dbc
 
-from figures import line_chart, bar_gender_faceted, create_card
-from layout_elements import row_one, row_two, row_three, row_four
+from paralympics_dash.figures import line_chart, bar_gender_faceted, create_card
+from paralympics_dash.layout_elements import row_one, row_two, row_three, row_four
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 meta_tags = [
