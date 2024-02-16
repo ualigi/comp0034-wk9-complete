@@ -8,7 +8,7 @@ def test_home_h1textequals(dash_duo):
     THEN the page title should be
     """
     # Create the app
-    app = import_app(app_file="src.paralympics_dash.paralympics_dash.py")
+    app = import_app(app_file="paralympics_dash.paralympics_dash.py")
 
     # Start the app in a server
     yield dash_duo.start_server(app)
