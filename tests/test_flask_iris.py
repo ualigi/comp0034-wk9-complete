@@ -3,7 +3,6 @@ import time
 
 import pytest
 import requests
-from flask import url_for
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -17,13 +16,13 @@ def live_server_iris():
     # Use subprocess to run the Flask app using the command line runner
     try:
         # You can customize the command based on your Flask app structure
-        server = subprocess.Popen(
-            ["flask", "--app", "flask_iris:create_app('test')", "run", "--port=5000"])
+        server_process = subprocess.Popen(
+            ["flask", "--app", "flask_iris:create_app('test')", "run", "--port", "5000"])
         # wait for the server to start
         time.sleep(2)
-        yield server
+        yield server_process
         # Teardown: Stop the Flask server
-        server.terminate()
+        server_process.terminate()
     except subprocess.CalledProcessError as e:
         print(f"Error starting Flask app: {e}")
 
@@ -35,7 +34,7 @@ def test_server_is_up_and_running(live_server_iris):
     assert response.status_code == 200
 
 
-def test_prediction_returns_value(live_server, chrome_driver):
+def test_prediction_returns_value(live_server_iris, chrome_driver):
     iris = {"sepal_length": 4.8, "sepal_width": 3.0, "petal_length": 1.4, "petal_width": 0.1, "species": "iris-setosa"}
     # Go to the home page (uses Flask url_for)
     chrome_driver.get("http://127.0.0.1:5000/")
@@ -43,17 +42,23 @@ def test_prediction_returns_value(live_server, chrome_driver):
         lambda d: d.find_element(By.NAME, "sepal_length")
     )
     # Complete the fields in the form
-    # sep_len = chrome_driver.find_element(By.NAME, "sepal_length")
+    # sep_len = chrome_driver.find_element(By.ID, "sepal_length")
+    sep_len.clear()
     sep_len.send_keys(iris["sepal_length"])
-    sep_wid = chrome_driver.find_element(By.NAME, "sepal_width")
+    sep_wid = chrome_driver.find_element(By.ID, "sepal_width")
+    sep_wid.clear()
     sep_wid.send_keys(iris["sepal_width"])
-    pet_len = chrome_driver.find_element(By.NAME, "petal_length")
+    pet_len = chrome_driver.find_element(By.ID, "petal_length")
+    pet_len.clear()
     pet_len.send_keys(iris["petal_length"])
-    pet_wid = chrome_driver.find_element(By.NAME, "petal_width")
+    pet_wid = chrome_driver.find_element(By.ID, "petal_width")
+    pet_wid.clear()
     pet_wid.send_keys(iris["petal_width"])
     # Click the submit button
+    time.sleep(1)
     chrome_driver.find_element(By.ID, "btn-predict").click()
     # Wait for the prediction text to appear on the page and then get the <p> with the id=“prediction-text”
+    chrome_driver.implicitly_wait(3)
     pt = WebDriverWait(chrome_driver, timeout=3).until(lambda d: d.find_element(By.ID, "prediction-text"))
     # Assert that 'setosa' is in the text value of the <p> element.
     assert iris["species"] in pt.text

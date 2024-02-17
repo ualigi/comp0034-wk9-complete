@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,11 +8,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 def test_server_is_up_and_running(live_server, client):
     # Uses the flask test client which makes a HTTP request and gets back a HTTP response
     # Chrome driver navigates to the page and does not access HTTP response
-    response = client.get("http://127.0.0.1:5000")
+    response = client.get('/')
     assert response.status_code == 200
+    assert b'Paralympics' in response.data
 
 
-def test_home_page_title(chrome_driver):
+def test_home_page_title(chrome_driver, live_server):
     """
     GIVEN a running app
     WHEN the homepage is accessed
@@ -18,15 +21,12 @@ def test_home_page_title(chrome_driver):
     """
     # Change the url if you configured a different port!
     chrome_driver.get("http://127.0.0.1:5000/")
-    elem = WebDriverWait(chrome_driver, 3).until(
-        EC.title_is("Paralympics - Home")  # This is a dummy element
-    )
-    # chrome_driver.implicitly_wait(3)
-    assert elem.text == "Paralympics - Home"
+    # Wait for the title to be there and its value to be "Paralympics - Home"
+    WebDriverWait(chrome_driver, 200).until(EC.title_is("Paralympics - Home"))
     assert chrome_driver.title == "Paralympics - Home"
 
 
-def test_event_detail_page_selected(chrome_driver):
+def test_event_detail_page_selected(chrome_driver, live_server):
     """
     GIVEN a running app
     WHEN the homepage is accessed
@@ -36,18 +36,21 @@ def test_event_detail_page_selected(chrome_driver):
     should be displayed and contain a text value "First Games"
     """
     chrome_driver.get("http://127.0.0.1:5000/")
-    # Wait until element with id="1" is on the page then click it
+    # Wait until element with id="1" is on the page then click it (this will be the URL for Rome)
     # https://www.selenium.dev/documentation/webdriver/waits/
     el_1 = WebDriverWait(chrome_driver, timeout=3).until(
         lambda d: d.find_element(By.ID, "1")
     )
     el_1.click()
-    # Find the text value of the event highlights
-    text = chrome_driver.find_element(By.ID, "highlights").text
-    assert "First Games" in text
+    # Clicking on the links takes you to the event details page for Rome
+    # Wait until event highlights is visible
+    text = WebDriverWait(chrome_driver, timeout=3).until(
+        lambda d: d.find_element(By.ID, "highlights")
+    )
+    assert "First Games" in text.text
 
 
-def test_home_nav_link_returns_home(chrome_driver):
+def test_home_nav_link_returns_home(chrome_driver, live_server):
     """
     GIVEN a running app
     WHEN the homepage is accessed

@@ -42,7 +42,7 @@ class TestConfig(Config):
     WTF_CSRF_ENABLED = False  # Needs to be turned off for testing
     # Does not force the server to start on this port, only references the server at this address
     # You need to configure run to the same port as server name
-    SERVER_NAME = "127.0.0.1:5000"
+    # SERVER_NAME = "127.0.0.1:5000"
 
 
 app_config = {

@@ -1,14 +1,24 @@
+import subprocess
 import time
-
 import pytest
+from selenium.webdriver import Chrome, ChromeOptions
 
 from paralympics_flask import create_app
-from selenium.webdriver import Chrome, ChromeOptions
+
+
+@pytest.fixture(scope="session")
+def chrome_driver():
+    options = ChromeOptions()
+    # Make the window large enough that all the dashboard appears
+    options.add_argument("start-maximized")
+    driver = Chrome(options=options)
+    yield driver
+    driver.quit()
 
 
 @pytest.fixture(scope='session')
 def app():
-    """Fixture to create the Flask app and configure for testing"""
+    """Fixture to create the paralympics_flask app and configure it for testing"""
     test_cfg = {
         "TESTING": True,
         "WTF_CSRF_ENABLED": False
@@ -28,29 +38,15 @@ def client(app):
 
 @pytest.fixture(scope='session')
 def live_server(app):
-    """Fixture to
-    run the Flask app as a live server."""
+    """Fixture to run the paralympics_flask app as a live server.
 
-    server = app.test_cli_runner().invoke(args=['run', '--no-reload', '--port=5000'])
-    # server = app.cli.invoke(args=['run', '--no-reload', '--port=5000'])
-
-    time.sleep(2)
-
-    # Ensure the server is up and running
-    # assert server.exit_code == 0
-    yield server
-
-    # Teardown: Stop the Flask server
-    server.terminate()
-
-
-@pytest.fixture(scope="session")
-def chrome_driver():
-    options = ChromeOptions()
-    # Make the window large enough that all the dashboard appears
-    options.add_argument("start-maximized")
-    options.add_argument('--proxy-server=localhost:8080')
-    # options.add_argument("--window-size=1920,1080")
-    driver = Chrome(options=options)
-    yield driver
-    driver.quit()
+    Runs the server in a separate thread so it can run at the same time as the tests.
+    """
+    try:
+        server = subprocess.Popen(["flask", "--app", "paralympics_flask", "run", "--port", "5000"])
+        # Allows time for the app to start
+        time.sleep(3)
+        yield server
+        server.terminate()
+    except subprocess.CalledProcessError as e:
+        print(f"Error starting Flask app: {e}")

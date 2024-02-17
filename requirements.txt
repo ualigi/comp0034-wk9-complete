@@ -6,8 +6,8 @@ Marshmallow-SQLAlchemy
 jwt
 flask-wtf
 wtforms-sqlalchemy
-# To create the model file in the Iris app
-# scikit-learn
+# To get a prediction in the Iris app
+scikit-learn
 # For Dash apps
 dash
 dash-bootstrap-components
