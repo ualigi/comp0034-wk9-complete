@@ -11,8 +11,7 @@ def app():
     """Fixture to create the Flask app and configure for testing"""
     test_cfg = {
         "TESTING": True,
-        "LIVESERVER_PORT": 5000,
-        "LIVESERVER_TIMEOUT": 10
+        "WTF_CSRF_ENABLED": False
     }
 
     app = create_app(test_config=test_cfg)
@@ -21,17 +20,25 @@ def app():
 
 
 @pytest.fixture(scope='session')
+def client(app):
+    with app.test_client() as testing_client:
+        with app.app_context():
+            yield testing_client
+
+
+@pytest.fixture(scope='session')
 def live_server(app):
     """Fixture to
     run the Flask app as a live server."""
 
     server = app.test_cli_runner().invoke(args=['run', '--no-reload', '--port=5000'])
+    # server = app.cli.invoke(args=['run', '--no-reload', '--port=5000'])
 
-    time.sleep(10)
+    time.sleep(2)
 
     # Ensure the server is up and running
     # assert server.exit_code == 0
-    yield 'http://localhost:5000'
+    yield server
 
     # Teardown: Stop the Flask server
     server.terminate()

@@ -3,15 +3,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-def test_example(start_flask, chrome_driver):
-    # Use live_server and browser fixtures in your test
-    chrome_driver.get(start_flask)
-    assert 'Welcome' in chrome_driver.page_source
-
-
-def test_server_is_up_and_running(chrome_driver):
-    response = chrome_driver.get("http://127.0.0.1:5000")
-    assert response.code == 200
+def test_server_is_up_and_running(live_server, client):
+    # Uses the flask test client which makes a HTTP request and gets back a HTTP response
+    # Chrome driver navigates to the page and does not access HTTP response
+    response = client.get("http://127.0.0.1:5000")
+    assert response.status_code == 200
 
 
 def test_home_page_title(chrome_driver):

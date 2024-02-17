@@ -1,48 +1,49 @@
+import subprocess
 import time
 
 import pytest
+import requests
 from flask import url_for
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
-from flask_iris import create_app
-from flask_iris.config import TestConfig
 
 
 # Fixtures are in the file as they supersede the versions in conftest.py.
 # Another approach would be to have subdirectories and multiple conftest.py.
 @pytest.fixture(scope='session')
-def app():
-    """Fixture to create the Flask app and configure for testing"""
+def live_server_iris():
+    """Fixture to run the Flask app as a live server."""
 
-    app = create_app(TestConfig)
+    # Use subprocess to run the Flask app using the command line runner
+    try:
+        # You can customize the command based on your Flask app structure
+        server = subprocess.Popen(
+            ["flask", "--app", "flask_iris:create_app('test')", "run", "--port=5000"])
+        # wait for the server to start
+        time.sleep(2)
+        yield server
+        # Teardown: Stop the Flask server
+        server.terminate()
+    except subprocess.CalledProcessError as e:
+        print(f"Error starting Flask app: {e}")
 
-    yield app
 
-
-@pytest.fixture(scope='session')
-def live_server(app):
-    """Fixture to
-    run the Flask app as a live server."""
-
-    server = app.test_cli_runner().invoke(args=['run', '--no-reload', '--port=5000'])
-
-    time.sleep(10)
-
-    # Ensure the server is up and running
-    # assert server.exit_code == 0
-    yield 'http://localhost:5000'
-
-    # Teardown: Stop the Flask server
-    server.terminate()
+def test_server_is_up_and_running(live_server_iris):
+    """Check the app is running"""
+    # Chrome_driver navigates to the page, whereas requests.get makes an HTTP request and returns an HTTP response
+    response = requests.get("http://127.0.0.1:5000")
+    assert response.status_code == 200
 
 
 def test_prediction_returns_value(live_server, chrome_driver):
     iris = {"sepal_length": 4.8, "sepal_width": 3.0, "petal_length": 1.4, "petal_width": 0.1, "species": "iris-setosa"}
     # Go to the home page (uses Flask url_for)
-    chrome_driver.get(url_for("index", _external=True))
+    chrome_driver.get("http://127.0.0.1:5000/")
+    sep_len = WebDriverWait(chrome_driver, timeout=3).until(
+        lambda d: d.find_element(By.NAME, "sepal_length")
+    )
     # Complete the fields in the form
-    sep_len = chrome_driver.find_element(By.NAME, "sepal_length")
+    # sep_len = chrome_driver.find_element(By.NAME, "sepal_length")
     sep_len.send_keys(iris["sepal_length"])
     sep_wid = chrome_driver.find_element(By.NAME, "sepal_width")
     sep_wid.send_keys(iris["sepal_width"])

@@ -1,22 +1,34 @@
+from pathlib import Path
+
 from flask import Flask
-from flask_iris.create_ml_model import create_model
+import logging
+
+from flask_iris.config import TestConfig, DevConfig, app_config
 
 
-def create_app(config_object):
+# from flask_iris.create_ml_model import create_model
+
+
+def create_app(config_name=None):
     """Create and configure the Flask app
 
     Args:
-    config_object: configuration class (see config.py)
+    config_name: name of the configuration environment (see config.py, app_config)
 
     Returns:
     Configured Flask app
 
     """
+    log_path = Path(__file__).parent.parent.parent.joinpath('iris_app.log')
+    logging.basicConfig(filename=str(log_path), level=logging.DEBUG)
+
     app = Flask(__name__)
 
-    app.config.from_object(config_object)
+    if config_name:
+        app.config.from_object(app_config[config_name])
+    else:
+        app.config.from_object(DevConfig)
 
-    # Include the routes from routes.py
     with app.app_context():
         from flask_iris import routes
 

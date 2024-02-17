@@ -6,6 +6,8 @@ Marshmallow-SQLAlchemy
 jwt
 flask-wtf
 wtforms-sqlalchemy
+# To create the model file in the Iris app
+# scikit-learn
 # For Dash apps
 dash
 dash-bootstrap-components
@@ -16,5 +18,4 @@ pytest
 pytest-cov
 selenium
 # pytest-flask
-# Dash testing may need to be esacaped: dash\[testing]
 dash[testing]
