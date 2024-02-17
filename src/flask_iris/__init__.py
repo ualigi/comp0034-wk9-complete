@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_iris.config import Config, TestConfig, DevConfig
+from flask_iris.config import TestConfig, DevConfig
 from flask_iris.create_ml_model import create_model
 
 
