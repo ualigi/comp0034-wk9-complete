@@ -40,4 +40,6 @@ class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_ECHO = True
     WTF_CSRF_ENABLED = False
-    # SERVER_NAME = "127.0.0.1:5000"
+    SERVER_NAME = "127.0.0.1:5000"
+    # LIVESERVER_PORT = 5000,
+    # LIVESERVER_TIMEOUT = 10

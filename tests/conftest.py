@@ -21,8 +21,9 @@ def app():
 
 
 @pytest.fixture(scope='session')
-def start_flask(app):
-    """Fixture to run the Flask app as a live server."""
+def live_server(app):
+    """Fixture to
+    run the Flask app as a live server."""
 
     server = app.test_cli_runner().invoke(args=['run', '--no-reload', '--port=5000'])
 
