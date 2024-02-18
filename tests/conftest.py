@@ -46,7 +46,7 @@ def client(app):
 def live_server(app):
     """Fixture to run the paralympics_flask app as a live server.
 
-    Runs the server in a separate thread so it can run at the same time as the tests.
+    Runs the server in a separate thread, so it can run at the same time as the tests.
     """
     try:
         server = subprocess.Popen(["flask", "--app", "paralympics_flask", "run", "--port", "5000"])

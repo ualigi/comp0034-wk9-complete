@@ -9,7 +9,7 @@ from flask_iris.config import app_config
 from flask_iris.create_ml_model import create_model
 
 
-def create_app(config_name='development'):
+def create_app(config_name=None):
     """Create and configure the Flask app
 
     Args:

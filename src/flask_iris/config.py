@@ -9,12 +9,6 @@ class Config:
     """Base config."""
 
     SECRET_KEY = "saULPgD9XU8vzLVk7kyLBw"
-    # configure the SQLite database location
-    SQLALCHEMY_DATABASE_URI = "sqlite:///" + str(
-        PROJECT_ROOT.joinpath("data", "iris.db")
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = False
 
 
 class ProdConfig(Config):
@@ -46,7 +40,7 @@ class TestConfig(Config):
 
 
 app_config = {
-    "development": DevConfig,
-    "production": ProdConfig,
+    "dev": DevConfig,
+    "prod": ProdConfig,
     "test": TestConfig
 }
