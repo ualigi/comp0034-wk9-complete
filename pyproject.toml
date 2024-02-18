@@ -23,3 +23,8 @@ filterwarnings = [
     # note the use of single quote below to denote "raw" strings in TOML
     #'ignore:function ham\(\) is deprecated:DeprecationWarning',
 ]
+# pyproject.toml
+addopts = "-ra -v"
+testpaths = [
+    "tests",
+]

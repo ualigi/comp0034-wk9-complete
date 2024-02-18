@@ -1,3 +1,4 @@
+import os
 import subprocess
 import time
 import pytest
@@ -8,9 +9,14 @@ from paralympics_flask import create_app
 
 @pytest.fixture(scope="session")
 def chrome_driver():
+    """
+    Fixture to create a Chrome driver. Running locally this needs to be in a large window; on GitHub it needs to be headless
+    """
     options = ChromeOptions()
-    # Make the window large enough that all the dashboard appears
-    options.add_argument("start-maximized")
+    if "GITHUB_ACTIONS" in os.environ:
+        options.add_argument("--headless")
+    else:
+        options.add_argument("start-maximized")
     driver = Chrome(options=options)
     yield driver
     driver.quit()
