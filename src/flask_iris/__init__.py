@@ -1,11 +1,5 @@
-from pathlib import Path
-
 from flask import Flask
-import logging
-
 from flask_iris.config import app_config
-
-
 from flask_iris.create_ml_model import create_model
 
 
@@ -17,10 +11,7 @@ def create_app(config_name=None):
 
     Returns:
     Configured Flask app
-
     """
-    log_path = Path(__file__).parent.parent.parent.joinpath('iris_app.log')
-    logging.basicConfig(filename=str(log_path), level=logging.DEBUG)
 
     app = Flask(__name__)
 

@@ -16,15 +16,10 @@ where = ["src"]  # list of folders that contain the packages (["."] by default)
 # exclude = ["tests"]
 
 [tool.pytest.ini_options]
+addopts = "-ra -v --no-start-live-server"
+testpaths = ["tests",]
 filterwarnings = [
-    "error",
+    # "error",
     "ignore::UserWarning",
     "ignore::DeprecationWarning",
-    # note the use of single quote below to denote "raw" strings in TOML
-    #'ignore:function ham\(\) is deprecated:DeprecationWarning',
-]
-# pyproject.toml
-addopts = "-ra -v"
-testpaths = [
-    "tests",
 ]

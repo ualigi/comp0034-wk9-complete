@@ -1,30 +1,7 @@
-import subprocess
 import time
-
-import pytest
 import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
-
-# Fixtures are in the file as they supersede the versions in conftest.py.
-# Another approach would be to have subdirectories and multiple conftest.py.
-@pytest.fixture(scope='session')
-def live_server_iris():
-    """Fixture to run the Flask app as a live server."""
-
-    # Use subprocess to run the Flask app using the command line runner
-    try:
-        # You can customize the command based on your Flask app structure
-        server_process = subprocess.Popen(
-            ["flask", "--app", "flask_iris:create_app('test')", "run", "--port", "5000"])
-        # wait for the server to start
-        time.sleep(2)
-        yield server_process
-        # Teardown: Stop the Flask server
-        server_process.terminate()
-    except subprocess.CalledProcessError as e:
-        print(f"Error starting Flask app: {e}")
 
 
 def test_server_is_up_and_running(live_server_iris):

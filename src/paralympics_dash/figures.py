@@ -51,10 +51,10 @@ def line_chart(feature):
     '''
     fig = px.line(line_chart_data,
                   x="year",
-                  y=feature,
+                  y=str(feature),
                   color="type",
                   title=title_text,
-                  labels={'year': 'Year', feature: '', 'type': ''},
+                  labels={'year': 'Year', str(feature): '', 'type': ''},
                   template="simple_white"
                   )
     return fig
