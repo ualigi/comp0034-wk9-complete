@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-def test_server_is_up_and_running(client, live_server_flask, chrome_driver, flask_port):
+def test_server_is_up_and_running(live_server_flask, chrome_driver, flask_port):
     """
     GIVEN a live server
     WHEN a GET HTTP request to the home page is made
@@ -18,9 +18,10 @@ def test_server_is_up_and_running(client, live_server_flask, chrome_driver, flas
     :param client: pytest-flask test client
     """
     time.sleep(2)
-    response = client.get('/')
+    url = f'http://127.0.0.1:{flask_port}/'
+    response = requests.get(url)
     assert response.status_code == 200
-    assert b"Paralympics" in response.data
+    assert b"Paralympics" in response.content
 
 
 def test_home_page_title(chrome_driver, live_server_flask, flask_port):

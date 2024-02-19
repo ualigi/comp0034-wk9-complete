@@ -30,23 +30,11 @@ def chrome_driver():
 
 
 @pytest.fixture(scope="session")
-def app():
-    """Fixture to create the paralympics_flask app and configure it for testing
-
-    Required by the pytest-flask library; must be called 'app'
-    See https://pytest-flask.readthedocs.io/en/latest/
-    """
-    test_cfg = {
-        "TESTING": True,
-        "WTF_CSRF_ENABLED": False
-    }
-    app = create_app(test_config=test_cfg)
-    yield app
-
-
-@pytest.fixture(scope="session")
 def flask_port():
-    """Gets a free port from the operating system."""
+    """Gets a free port from the operating system.
+
+    See: https://github.com/pytest-dev/pytest-flask/issues/54
+    """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("", 0))
         addr = s.getsockname()
@@ -60,14 +48,12 @@ def live_server_flask(flask_port):
 
     Renamed to live_server_flask to avoid issues with pytest-flask live_server
     """
-    test_cfg = {"TESTING": True, "WTF_CSRF_ENABLED": False}
-
     # Construct the command string with formatted dictionary
-    # command = f'flask --app \'paralympics_flask:create_app(test_config={test_cfg})\' run --port {flask_port} '
-    command = """ flask --app 'paralympics_flask:create_app(test_config={"TESTING": True, "WTF_CSRF_ENABLED": False})' run --port """ + str(flask_port)
+    command = """flask --app 'paralympics_flask:create_app(test_config={"TESTING": True, "WTF_CSRF_ENABLED": False})' run --port """ + str(flask_port)
     try:
         server = subprocess.Popen(command, shell=True)
         # Allow time for the app to start
+        time.sleep(3)
         yield server
         server.terminate()
     except subprocess.CalledProcessError as e:
