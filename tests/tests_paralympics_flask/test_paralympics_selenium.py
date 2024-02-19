@@ -10,14 +10,7 @@ def test_server_is_up_and_running(live_server_flask, chrome_driver, flask_port):
     GIVEN a live server
     WHEN a GET HTTP request to the home page is made
     THEN the HTTP response should have a bytes string "paralympics" in the data and a status code of 200
-
-    Note: client is used rather than the chrome_driver as the chrome_driver navigates to a page,
-    it does not return an HTTP response
-
-    :param live_server: pytest-flask live server running the app as configured by the 'app' fixture in conftest.py
-    :param client: pytest-flask test client
     """
-    time.sleep(2)
     url = f'http://127.0.0.1:{flask_port}/'
     response = requests.get(url)
     assert response.status_code == 200
