@@ -1,11 +1,12 @@
 import time
 import requests
+from flask import url_for
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-def test_server_is_up_and_running(client, live_server_flask, chrome_driver, flask_port):
+def test_server_is_up_and_running(client, live_server):
     """
     GIVEN a live server
     WHEN a GET HTTP request to the home page is made
@@ -23,21 +24,24 @@ def test_server_is_up_and_running(client, live_server_flask, chrome_driver, flas
     assert b"Paralympics" in response.data
 
 
-def test_home_page_title(chrome_driver, live_server_flask, flask_port):
+def test_home_page_title(chrome_driver, live_server):
     """
     GIVEN a running app
     WHEN the homepage is accessed
     THEN the value of the page title should be "Paralympics - Home"
     """
-    url = f'http://127.0.0.1:{flask_port}/'
-    # print(f'url {url}')
+    chrome_driver.implicitly_wait(3)
+    host = live_server.host
+    port = live_server.port
+    url = f'http://{host}:{port}/'
+    print(f'url {url}')
     chrome_driver.get(url)
     # Wait for the title to be there and its value to be "Paralympics - Home"
     WebDriverWait(chrome_driver, 2).until(EC.title_is("Paralympics - Home"))
     assert chrome_driver.title == "Paralympics - Home"
 
 
-def test_event_detail_page_selected(chrome_driver, live_server_flask, flask_port):
+def test_event_detail_page_selected(chrome_driver, live_server):
     """
     GIVEN a running app
     WHEN the homepage is accessed
@@ -46,7 +50,9 @@ def test_event_detail_page_selected(chrome_driver, live_server_flask, flask_port
     AND the page should contain an element with the id "highlights"
     should be displayed and contain a text value "First Games"
     """
-    url = f'http://127.0.0.1:{flask_port}/'
+    host = live_server.host
+    port = live_server.port
+    url = f'http://{host}:{port}/'
     chrome_driver.get(url)
     # Wait until element with id="1" is on the page then click it (this will be the URL for Rome)
     # https://www.selenium.dev/documentation/webdriver/waits/
@@ -62,7 +68,7 @@ def test_event_detail_page_selected(chrome_driver, live_server_flask, flask_port
     assert "First Games" in text.text
 
 
-def test_home_nav_link_returns_home(chrome_driver, live_server_flask, flask_port):
+def test_home_nav_link_returns_home(chrome_driver, live_server):
     """
     GIVEN a running app
     WHEN the homepage is accessed
@@ -70,7 +76,9 @@ def test_home_nav_link_returns_home(chrome_driver, live_server_flask, flask_port
     AND then the user clicks on the navbar in the 'Home' link
     THEN the page url should be "http://127.0.0.1:port/" (port is dynamically assigned by live_server)
     """
-    url = f'http://127.0.0.1:{flask_port}/'
+    host = live_server.host
+    port = live_server.port
+    url = f'http://{host}:{port}/'
     chrome_driver.get(url)
     # Wait until element with id="1" is on the page then click
     # https://www.selenium.dev/documentation/webdriver/waits/

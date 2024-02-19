@@ -1,17 +1,26 @@
+import json
 import os
+import socket
+import subprocess
+import time
 import pytest
 from selenium.webdriver import Chrome, ChromeOptions
 
 from paralympics_flask import create_app
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def chrome_driver():
     """
-    Fixture to create a Chrome driver. Running locally this needs to be in a large window; on GitHub it needs to be headless
+    Fixture to create a Chrome driver.
+
+    On GitHub or other container it needs to run headless, i.e. the browser doesn't open and display on screen.
+    Running locally you may want to display the tests in a large window to visibly check the behaviour.
     """
     options = ChromeOptions()
     if "GITHUB_ACTIONS" in os.environ:
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
         options.add_argument("--headless")
     else:
         options.add_argument("start-maximized")
@@ -35,38 +44,31 @@ def app():
     yield app
 
 
-'''
-@pytest.fixture(scope='session')
-def start_live_server(live_server):
-    """
-    Fixture to start the live server based on the pytest-flask module.
-    Live server has a scope of session by default
-    See https://pytest-flask.readthedocs.io/en/latest/features.html#live-server-application-live-server
-    :param live_server:
-    :return:
-    """
-    live_server.start()
-    time.sleep(3)
-    yield live_server
-    live_server.stop()
-'''
+@pytest.fixture(scope="session")
+def flask_port():
+    """Gets a free port from the operating system."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("", 0))
+        addr = s.getsockname()
+        port = addr[1]
+        return port
 
-'''
-@pytest.fixture(scope='session')
-def live_server():
-    """Fixture to run the paralympics_flask app as a live server.
 
-    Runs the server in a separate thread, so it can run at the same time as the tests.
+@pytest.fixture(scope="session")
+def live_server_flask(flask_port):
+    """Runs the Flask app as a live server for Selenium tests (Paralympic app)
+
+    Renamed to live_server_flask to avoid issues with pytest-flask live_server
     """
-    #test_cfg = {"TESTING": True, "WTF_CSRF_ENABLED": False}
-    # paralympics = f"paralympics_flask:create_app('test_config={{'TESTING': True, 'WTF_CSRF_ENABLED': False}}')"
+    test_cfg = {"TESTING": True, "WTF_CSRF_ENABLED": False}
+
+    # Construct the command string with formatted dictionary
+    # command = f'flask --app \'paralympics_flask:create_app(test_config={test_cfg})\' run --port {flask_port} '
+    command = """ flask --app 'paralympics_flask:create_app(test_config={"TESTING": True, "WTF_CSRF_ENABLED": False})' run --port """ + str(flask_port)
     try:
-        # server = subprocess.Popen(["flask", "--app", paralympics, "run", "--port", "5000"])
-        server = subprocess.Popen(["flask", "--app", "paralympics_flask", "run", "--port", "5000"])
-        # Allows time for the app to start
-        time.sleep(3)
+        server = subprocess.Popen(command, shell=True)
+        # Allow time for the app to start
         yield server
         server.terminate()
     except subprocess.CalledProcessError as e:
         print(f"Error starting Flask app: {e}")
-'''

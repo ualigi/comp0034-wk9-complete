@@ -12,6 +12,8 @@ def chrome_driver():
     """
     options = ChromeOptions()
     if "GITHUB_ACTIONS" in os.environ:
+        options.add_argument("--disable-gpu")
+        options.add_argument("--no-sandbox")
         options.add_argument("--headless")
     else:
         options.add_argument("start-maximized")

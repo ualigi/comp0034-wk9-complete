@@ -17,7 +17,7 @@ where = ["src"]  # list of folders that contain the packages (["."] by default)
 
 [tool.pytest.ini_options]
 # addopts = "-ra -v --no-start-live-server"
-addopts = "-ra -v"
+addopts = "-v"
 testpaths = ["tests",]
 filterwarnings = [
     # "error",
