@@ -1,4 +1,3 @@
-import time
 import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -24,7 +23,6 @@ def test_home_page_title(chrome_driver, live_server_flask, flask_port):
     THEN the value of the page title should be "Paralympics - Home"
     """
     url = f'http://127.0.0.1:{flask_port}/'
-    # print(f'url {url}')
     chrome_driver.get(url)
     # Wait for the title to be there and its value to be "Paralympics - Home"
     WebDriverWait(chrome_driver, 2).until(EC.title_is("Paralympics - Home"))
@@ -36,9 +34,7 @@ def test_event_detail_page_selected(chrome_driver, live_server_flask, flask_port
     GIVEN a running app
     WHEN the homepage is accessed
     AND the user clicks on the event with the id="1"
-    THEN a page with the title "Rome" should be displayed
-    AND the page should contain an element with the id "highlights"
-    should be displayed and contain a text value "First Games"
+    THEN the page should contain an element with the id "highlights" that contains "First Games" in the text
     """
     url = f'http://127.0.0.1:{flask_port}/'
     chrome_driver.get(url)
@@ -50,10 +46,11 @@ def test_event_detail_page_selected(chrome_driver, live_server_flask, flask_port
     el_1.click()
     # Clicking on the links takes you to the event details page for Rome
     # Wait until event highlights is visible
-    text = WebDriverWait(chrome_driver, timeout=3).until(
+    highlight = WebDriverWait(chrome_driver, timeout=3).until(
         lambda d: d.find_element(By.ID, "highlights")
     )
-    assert "First Games" in text.text
+    # Find the text value of the
+    assert "First Games" in highlight.text
 
 
 def test_home_nav_link_returns_home(chrome_driver, live_server_flask, flask_port):
