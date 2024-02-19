@@ -16,8 +16,7 @@ def test_server_is_up_and_running(client, live_server):
     :param live_server: pytest-flask live server running the app as configured by the 'app' fixture in conftest.py
     :param client: pytest-flask test client
     """
-    live_server.start()
-    time.sleep(3)
+    time.sleep(2)
     response = client.get('/')
     assert response.status_code == 200
     assert b"Paralympics" in response.data
@@ -30,7 +29,6 @@ def test_home_page_title(chrome_driver, live_server):
     THEN the value of the page title should be "Paralympics - Home"
     """
     url = live_server.url('/')
-    print(f'url: {url}')
     chrome_driver.get(url)
     # Wait for the title to be there and its value to be "Paralympics - Home"
     WebDriverWait(chrome_driver, 2).until(EC.title_is("Paralympics - Home"))
@@ -47,7 +45,6 @@ def test_event_detail_page_selected(chrome_driver, live_server):
     should be displayed and contain a text value "First Games"
     """
     url = live_server.url('/')
-    print(f'url: {url}')
     chrome_driver.get(url)
     # Wait until element with id="1" is on the page then click it (this will be the URL for Rome)
     # https://www.selenium.dev/documentation/webdriver/waits/
@@ -69,11 +66,10 @@ def test_home_nav_link_returns_home(chrome_driver, live_server):
     WHEN the homepage is accessed
     AND then the user clicks on the event with the id="1"
     AND then the user clicks on the navbar in the 'Home' link
-    THEN the page url should be "http://127.0.0.1:5000/"
+    THEN the page url should be "http://127.0.0.1:port/" (port is dynamically assigned by live_server)
     """
     # url = "http://127.0.0.1:5001/"
     url = live_server.url('/')
-    print(f'url: {url}')
     chrome_driver.get(url)
     # Wait until element with id="1" is on the page then click
     # https://www.selenium.dev/documentation/webdriver/waits/
@@ -86,4 +82,4 @@ def test_home_nav_link_returns_home(chrome_driver, live_server):
     )
     nav_home.click()
     curr_url = chrome_driver.current_url
-    assert curr_url == "http://127.0.0.1:5001/"
+    assert curr_url == url
