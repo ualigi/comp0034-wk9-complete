@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-def test_server_is_up_and_running(live_server_flask, chrome_driver, flask_port):
+def test_server_is_up_and_running(live_server_flask, flask_port):
     """
     GIVEN a live server
     WHEN a GET HTTP request to the home page is made
