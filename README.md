@@ -33,7 +33,7 @@ on your operating system and python version:
 
 ## Example tests
 
-| App                         | Test examples cover                                                                                                                                                                          |
+| Test directory                         | Test examples cover                                                                                                                                                                          |
 |:----------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | test_dash_with_rest         | Very basic Dash app that has content from a REST API. The REST API is run using a fixture.                                                                                                   |
 | test_flask_with_rest        | Very basic Flask app that has a page from a REST API (/rest) that is accessed by clicking on a hyperlink from the home page (/). The REST API and the Flask app are both run using fixtures. |
