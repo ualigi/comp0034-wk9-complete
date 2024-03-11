@@ -1,8 +1,4 @@
-import json
 import os
-import socket
-import subprocess
-import time
 import pytest
 from selenium.webdriver import Chrome, ChromeOptions
 

@@ -18,6 +18,7 @@ def test_server_live(dash_duo):
 
     # Delay to wait 2 seconds for the page to load
     dash_duo.driver.implicitly_wait(2)
+
     # Get the url for the web app root
     # You can print this to see what it is e.g. print(f'The server url is {url}')
     url = dash_duo.driver.current_url
@@ -63,6 +64,7 @@ def test_map_marker_select_updates_card(dash_duo):
     dash_duo.start_server(app)
     # Wait for the div with id of card to be on the page
     dash_duo.wait_for_element("#card", timeout=2)
+
     # There is no card so finding elements with a bootstrap class of 'card' should return 0
     cards = dash_duo.driver.find_elements(By.CLASS_NAME, "card")
     cards_count_start = len(cards)
@@ -103,15 +105,6 @@ def test_line_chart_selection(dash_duo):
     dropdown_input = dash_duo.find_element("#type-dropdown")
     dropdown_input.send_keys("Sports")
     dash_duo.driver.implicitly_wait(2)
-
-    # To find part of a graph is not easy, selecting the id of the chart does not let you find chart name etc
-    # One technique is to find the Xpath of the component you want using a Chrome browser.
-    # See answers https://stackoverflow.com/questions/59961926/how-to-get-absolute-xpath-in-chrome-or-firefox
-    # Using the xpath currently fails.
-    # xpath = '//*[@id="line"]/div[2]/div/div/svg[2]/g[4]/g[2]/text'
-    # full_xpath = '/html/body/div/div/div/div[3]/div[1]/div/div/div[3]/div[1]/div/div[2]/div/div/svg[2]/g[4]/g[2]/text'
-    # chart_title = dash_duo.driver.find_element(By.XPATH, full_xpath)
-    # print(chart_title.text)
 
     # Run the app and use Chrome browser, find the element, right click and choose Select, find the element in the
     # Elements console and select 'copy selector'. Pate this as the value of the variable e.g. see css_selector below.

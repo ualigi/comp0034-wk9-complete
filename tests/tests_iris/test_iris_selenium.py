@@ -1,3 +1,5 @@
+import time
+
 import requests
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -23,6 +25,9 @@ def test_prediction_returns_value(live_server_iris, chrome_driver):
     sep_len = WebDriverWait(chrome_driver, timeout=3).until(
         lambda d: d.find_element(By.NAME, "sepal_length")
     )
+
+    time.sleep(2)
+
     # Complete the fields in the form
     # sep_len = chrome_driver.find_element(By.ID, "sepal_length")
     sep_len.clear()
@@ -33,6 +38,7 @@ def test_prediction_returns_value(live_server_iris, chrome_driver):
     pet_len = chrome_driver.find_element(By.ID, "petal_length")
     pet_len.clear()
     pet_len.send_keys(iris["petal_length"])
+    time.sleep(2)
     pet_wid = chrome_driver.find_element(By.ID, "petal_width")
     pet_wid.clear()
     pet_wid.send_keys(iris["petal_width"])
