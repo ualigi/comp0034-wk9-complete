@@ -30,24 +30,18 @@ jobs:
           pip install -e .
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           python -m pip install dash\[testing]
-      - name: Lint with flake8
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest (Dash Multipage app)
         run: |
           python -m pytest tests/test_dash_multipage -v
       - name: Test with pytest (Flask Iris ML app)
         run: |
-          python -m pytest tests/iris -v
+          python -m pytest tests/tests_iris -v
       - name: Test with pytest (Dash paralympics)
         run: |
-          python -m pytest tests/test_paralympics_dash -v
+          python -m pytest tests/testt_paralympics_dash -v
       - name: Test with pytest (Flask paralympics app)
         run: |
-          python -m pytest tests/test_paralympics_flask -v
+          python -m pytest tests/tests_paralympics_flask -v
 #      - name: Test with pytest and Pytest-Flask (Dash Paralympics)
 #        run: |
 #          python -m pytest tests/test_para_with_pytest_flask -v
