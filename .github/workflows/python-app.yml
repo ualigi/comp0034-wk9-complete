@@ -39,9 +39,6 @@ jobs:
       - name: Test with pytest (Dash Multipage app)
         run: |
           python -m pytest tests/test_dash_multipage -v
-      - name: Test with pytest and Pytest-Flask (Dash Paralympics)
-        run: |
-          python -m pytest tests/test_para_with_pytest_flask -v
       - name: Test with pytest (Flask Iris ML app)
         run: |
           python -m pytest tests/iris -v
@@ -51,6 +48,9 @@ jobs:
       - name: Test with pytest (Flask paralympics app)
         run: |
           python -m pytest tests/test_paralympics_flask -v
+      - name: Test with pytest and Pytest-Flask (Dash Paralympics)
+        run: |
+          python -m pytest tests/test_para_with_pytest_flask -v
 #
 #
 #  jobwindows:
